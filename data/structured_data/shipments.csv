@@ -1,0 +1,4 @@
+shipment_id,po_number,carrier,status,estimated_delivery_date
+1,PO12345,FedEx,In Transit,2025-11-10
+2,PO67890,UPS,Delayed,2025-11-12
+3,PO12345,FedEx,Delivered,2025-11-05

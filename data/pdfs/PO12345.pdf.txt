@@ -1,0 +1,13 @@
+Purchase Order: PO12345
+Vendor: Acme Corporation
+Date: 2025-11-01
+Item: Widget A
+Quantity: 100
+Price: $10.00
+Total: $1000.00
+
+---
+
+This is a simulated PDF file for a purchase order.
+In a real scenario, this would be a binary PDF file.
+The agent would use Snowflake's unstructured data processing capabilities to extract information from this file.
