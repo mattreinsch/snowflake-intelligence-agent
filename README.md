@@ -1,49 +1,151 @@
-# From Query to Action: A Snowflake AI Agent Demo
+# 🤖 Snowflake Intelligence Agent
 
-This repository contains the code for the "From Query to Action: How I Built a Snowflake Agent That Thinks, Plans, and Acts" article. It demonstrates a Snowflake-native AI agent that can reason, plan, and execute actions by interacting with structured and unstructured data.
+### An AI Agent That Thinks, Plans, and Acts — Inside Snowflake
 
-## How to Run the Demo in Snowflake
+This repository supports the demo from my article:
 
-This demo is designed to be run in a Snowflake Notebook.
+📄 **[“From Query to Action: How I Built a Snowflake Agent That Thinks, Plans, and Acts”](https://medium.com/@mattsreinsch/from-query-to-action-how-i-built-a-snowflake-agent-that-thinks-plans-and-acts-227f72b8428e)**
 
-### 1. Set Up Your Snowflake Environment
+The purpose of this project is to showcase a **Snowflake-native AI agent** capable of executing complex workflows:
+* Generating a step-by-step plan.
+* Querying structured data.
+* Processing unstructured documents.
+* Synthesizing insights.
+* Executing an action.
 
-Before running the notebook, you need to create the `SHIPMENTS` table in your Snowflake account.
+**All operations happen inside Snowflake using Snowpark, stages, and Cortex.**
 
-*   Open a new Snowflake worksheet.
-*   Copy and paste the content of `setup.sql` into your worksheet and run it. This will create the `SHIPMENTS` table and populate it with sample data.
+---
 
-### 2. Upload Unstructured Data to a Stage
+## 🚀 Demo Capabilities
 
-The agent needs access to a PDF document (represented as a text file in this demo).
+### 🧠 1. Agent Planning
+The agent begins by generating a structured plan based on the user request.
 
-*   In your Snowflake worksheet, create a stage:
-    ```sql
-    CREATE OR REPLACE STAGE PDF_DOCUMENTS_STAGE;
-    ```
-*   Upload the `data/pdfs/PO12345.pdf.txt` file to this stage. You can do this using the Snowsight UI or SnowSQL.
+**Example Plan Output:**
+```json
+[
+  { "step": "1", "action": "find_structured_data", "parameters": { "po_number": "PO12345" } },
+  { "step": "2", "action": "find_unstructured_data", "parameters": { "po_number": "PO12345" } },
+  { "step": "3", "action": "calculate_risk", "parameters": {} },
+  { "step": "4", "action": "notify_channel", "parameters": { "channel": "#supply-chain-alerts" } }
+]
+```
+This step-based logic ensures interpretability and auditability.
 
-### 3. Run the Snowflake Notebook
+### 📊 2. Structured Data Query
+Using Snowpark, the agent reads from a table like `SHIPMENTS`, retrieves current statuses, and identifies high-risk POs (Purchase Orders).
 
-*   Open the `notebooks/supply_chain_agent.ipynb` notebook in your Snowflake account.
-*   In the notebook, locate the cell where `YOUR_DATABASE` and `YOUR_SCHEMA` are defined. Update these variables with the database and schema where you created the `SHIPMENTS` table.
-*   Run all the cells in the notebook to see the agent in action.
+### 📄 3. Unstructured Data Processing
+The agent pulls a document from a Snowflake stage (e.g., `PO12345.pdf.txt`), extracts key fields (like total order value) using Cortex, and blends it with the structured data.
 
-## Repository Structure
+### 🔗 4. Insight Fusion
+By marrying structured and unstructured sources, the agent arrives at actionable intelligence:
+> *“Shipment #12345 is delayed with $1,000 at risk.”*
 
-*   `notebooks/supply_chain_agent.ipynb`: The main Snowflake Notebook that demonstrates the agent's workflow.
-*   `src/agent_core.py`: Contains the core logic for the `SupplyChainAgent`.
-*   `setup.sql`: SQL script to set up the necessary tables in Snowflake.
-*   `data/`: Contains the sample structured and unstructured data used in the demo.
+### 📢 5. Action Execution
+Finally, a simulated notification triggers to close the gap between insight and operations:
 
-## Conceptual Overview
+```text
+Automated Alert: High Risk – Shipment for PO12345 is delayed.
+Total value at risk: $1,000.
+```
 
-This demo simulates a sophisticated AI agent using Snowflake's capabilities:
+---
 
-*   **Planning:** The agent first generates a multi-step plan using a simulated call to Snowflake Cortex.
-*   **Execution:** It then executes this plan by:
-    *   Querying the `SHIPMENTS` table for structured data using Snowpark.
-    *   Accessing a document from a Snowflake stage to get unstructured data.
-*   **Action:** Finally, it calculates the risk and simulates sending a notification.
+## 📦 Repository Structure
 
-This entire process is orchestrated within Snowflake, showcasing how to build powerful, explainable, and governable AI agents.
+```text
+snowflake-intelligence-agent/
+│
+├── notebooks/
+│   └── supply_chain_agent.ipynb   # Snowflake Notebook demo
+│
+├── src/
+│   ├── agent_core.py              # Core agent logic
+│   └── planning.py                # Optional plan generation layer
+│
+├── sql/
+│   ├── setup.sql                  # Creates SHIPMENTS table + sample data
+│   └── create_stages.sql          # Uploads or defines stage for unstructured data
+│
+├── data/
+│   └── pdfs/
+│       └── PO12345.pdf.txt        # Sample document used in demo
+│
+├── LICENSE                        # MIT License
+└── README.md                      # Project Documentation
+```
+
+---
+
+## 🛠️ Setup Guide (Snowflake)
+
+### 1. Run the Setup SQL
+Execute the contents of `sql/setup.sql` in a Snowsight Worksheet to create the table and dummy data.
+
+```sql
+-- Example content of setup.sql
+CREATE OR REPLACE TABLE SHIPMENTS ...;
+INSERT INTO SHIPMENTS ...;
+```
+
+### 2. Stage Upload
+Create the stage for your documents:
+
+```sql
+CREATE OR REPLACE STAGE PDF_DOCUMENTS_STAGE;
+```
+
+* Upload `data/pdfs/PO12345.pdf.txt` to this stage using the Snowsight UI or SnowSQL.
+
+### 3. Open the Notebook
+1.  Import `notebooks/supply_chain_agent.ipynb` into Snowflake Notebooks.
+2.  Update the `YOUR_DATABASE` and `YOUR_SCHEMA` variables at the top of the notebook.
+3.  Select a warehouse and run all cells.
+
+---
+
+## 🧠 How the Agent Works
+
+The demo illustrates how enterprise agents should behave:
+
+1.  **Plan → Execute → Act**
+2.  **Combine** structured & unstructured data
+3.  **Fully governed** within Snowflake
+4.  **Explainable, auditable, production-ready**
+
+**Ideal for use cases in:**
+* Supply chain / logistics
+* Procurement risk detection
+* Document-driven analytics
+* Operational automation
+
+---
+
+## 🤝 Contributing & Extensions
+
+You’re welcome to enhance this demo! Here are some ideas:
+
+* Swap the simulated Cortex plan with `ai_instruct()`.
+* Integrate real Slack/Teams notifications via External Access Policies.
+* Expand to multi-tenant or multi-schema architectures.
+* Add change detection (CDC) or SCD.
+* Build a Streamlit dashboard to visualize agent metrics.
+
+Feel free to fork, submit PRs, or open issues.
+
+---
+
+## 📬 Stay Connected
+
+* 🔗 **[LinkedIn](https://www.linkedin.com/in/mattreinsch)**
+* ✍️ **[Medium](https://medium.com/@mattsreinsch)**
+* 📰 **[Newsletter (Data Drift)](https://mattreinsch.github.io/DataDrift)**
+* 🌐 **[Website](https://mattreinsch.com)**
+
+**⭐ Support:**
+If you find this project useful:
+* **Star** the repository.
+* **Fork** it and build your use case.
+* **Share** a project image on LinkedIn and tag me — I’d love to see what you create!
